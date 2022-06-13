@@ -387,7 +387,7 @@ If (getPricingFormat == true) then
 }
 else
 {
-	If (getR3FCanTransport != true) then 
+	If (getR3FLogFormat != true) then 
 	{
 		copyToClipboard _catagoryListFormat;
 	}
