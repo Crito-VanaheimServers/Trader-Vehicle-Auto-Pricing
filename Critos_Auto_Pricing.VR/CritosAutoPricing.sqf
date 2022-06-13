@@ -9,7 +9,7 @@ private ["_mapCenter","_vehicle","_vehicles","_vehBasePrice","_heliBasePrice","_
 		 "_vehicleClassName","_basePriceInfo","_baseQuality","_armorQuality","_adjBaseQuality","_projectileTypequality","_exceptionProjectiles",
 		 "_adjProjectileQuality","_numWeaponsQuality","_strClass","_characterNumbers","_characterNumbersArray","_maxCharacters",
 		 "_vehClassNameCharacters","_addedSpaces","_Spacing","_spacingAmount","_spaceCounter","_vehSpawn","_vehObject",
-		 "_magsTurretArray"];
+		 "_magsTurretArray","_R3FTransportFormat","_R3FTransportArray","_R3FListFormat"];
 
 #include "config.sqf";
 
@@ -54,8 +54,10 @@ _vehicleClassNames = [];
 _PriceArray = [];
 _characterNumbersArray = [];
 _classListformatArray = [];
+_R3FTransportArray = [];
 _PriceArrayFormat = "";
 _catagoryListFormat = "",
+_R3FListFormat = "";
 
 {
 	_magsArray = [];
@@ -151,7 +153,6 @@ _maxCharacters = selectMax _characterNumbersArray;
 		_rocketPrice = boatRocketPrice;
 		_missilePrice = boatMissilePrice;
 	};
-
 
 	_bulletCountArray = [];
 	_shellCountArray = [];
@@ -335,26 +336,28 @@ if !(100 in _turretPathArrayIndex) then
 	};
 	
 	_totalVehiclePrice = _vehBasePrice+_bullettotal+_shelltotal+_rockettotal+_missiletotal+_Armortotal+_Loadtotal+_Speedtotal+_Fueltotal;
-	
+		
 	_vehicleClassName = _x select 0;
 	
-	_vehClassNameCharacters = count _vehicleClassName;
-	_addedSpaces = " ";				
-	_Spacing = "";
-	_spacingAmount = _maxCharacters - _vehClassNameCharacters + 10;
-	_spaceCounter = 0;
-	
-		for "_i" from 0 to _spacingAmount do
-		{
-			_spaceCounter = _spaceCounter + 1;
-			_Spacing = _Spacing + _addedSpaces;
-		};	
+		_vehClassNameCharacters = count _vehicleClassName;
+		_addedSpaces = " ";				
+		_Spacing = "";
+		_spacingAmount = _maxCharacters - _vehClassNameCharacters + 20;
+		_spaceCounter = 0;
 		
-	_vehicleClassName =  _vehicleClassName splitstring "";
-	_Spacing = _Spacing splitstring "";	
-	_vehicleClassName = _vehicleClassName + _Spacing;
-	_vehicleClassName = _vehicleClassName joinstring "";										
-	
+			for "_i" from 0 to _spacingAmount do
+			{
+				_spaceCounter = _spaceCounter + 1;
+				_Spacing = _Spacing + _addedSpaces;
+			};	
+			
+		_vehicleClassName =  _vehicleClassName splitstring "";
+		_Spacing = _Spacing splitstring "";	
+		_vehicleClassName = _vehicleClassName + _Spacing;
+		_vehicleClassName = _vehicleClassName joinstring "";										
+
+	_R3FTransportFormat = format ['["%1", %2],',_vehicleClassNameIndex,_loadRating];
+	_R3FTransportArray pushBack _R3FTransportFormat;
 	_basePriceInfo = format ['class %1{quality = %2; price = %3;};',_vehicleClassName,_quality,_totalVehiclePrice];
 	_classListformat = format ['"%1",', _vehicleClassNameIndex];
 	systemChat str _vehicleClassNameIndex;
@@ -364,6 +367,7 @@ if !(100 in _turretPathArrayIndex) then
 
 _PriceArray sort true;
 _classListformatArray sort true;
+_R3FTransportArray sort true;
 
 {
 	_PriceArrayFormat = _PriceArrayFormat + format['%1%2',_x, endl];
@@ -373,13 +377,24 @@ _classListformatArray sort true;
 	_catagoryListFormat = _catagoryListFormat + format['%1%2',_x, endl];
 }forEach _classListformatArray;
 
+{
+	_R3FListFormat = _R3FListFormat + format['%1%2',_x, endl];
+}forEach _R3FTransportArray;
+
 If (getPricingFormat == true) then
 {
 	copyToClipboard _PriceArrayFormat;
 }
 else
 {
-	copyToClipboard _catagoryListFormat;
+	If (getR3FCanTransport != true) then 
+	{
+		copyToClipboard _catagoryListFormat;
+	}
+	else
+	{
+		copyToClipboard _R3FListFormat;
+	};
 };
 
 systemChat str "AUTO PRICING POVIDED BY CRITO";
