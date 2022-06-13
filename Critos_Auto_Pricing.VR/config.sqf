@@ -122,5 +122,5 @@ userVehicleArray = 	[
 						"Exile_Chopper_Taru_Covered_CSAT",
 						"Exile_Chopper_Taru_CSAT",
 						"Exile_Chopper_Taru_Transport_Black",
-						"Exile_Chopper_Taru_Transport_CSAT",
+						"Exile_Chopper_Taru_Transport_CSAT"
 					];
