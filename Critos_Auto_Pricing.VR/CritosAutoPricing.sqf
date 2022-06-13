@@ -111,7 +111,7 @@ _maxCharacters = selectMax _characterNumbersArray;
 {
 	_vehicleClassNameIndex = _x select 0;
 
-	if (_vehicleClassNameIndex isKindOf "Car") then
+	if (_vehicleClassNameIndex isKindOf "LandVehicle") then
 	{
 		_baseQuality = vehStartQuality;
 		_vehBasePrice = vehBasePrice;
@@ -217,12 +217,12 @@ _maxCharacters = selectMax _characterNumbersArray;
 		_projectileTypequality = _adjBaseQuality + 1;
 		_addedProjectilePoint = true;
 	};
-	if ("Shell" in _projectileTypes) then
+	if (("Shell" in _projectileTypes) || ("Artillery" in _projectileTypes)) then
 	{
 		_projectileTypequality = _adjBaseQuality + 2;
 		_addedProjectilePoint = true;
 	};
-	if (("Rocket" in _projectileTypes) || ("Artillery" in _projectileTypes)) then
+	if ("Rocket" in _projectileTypes) then
 	{
 		_projectileTypequality = _adjBaseQuality + 3;
 		_addedProjectilePoint = true;
@@ -309,18 +309,30 @@ if !(100 in _turretPathArrayIndex) then
 				_missileCountArray pushback _missileCountIndex;
 			};
 	}forEach _ammoCountArrayIndex;
-	
+
 	_bullettotal = 0;
-	{_bullettotal = _bullettotal + _x * _bulletPrice} forEach _bulletCountArray;
-	
+	if ("Bullet" in _projectileTypes) then
+	{
+		{_bullettotal = _bullettotal + _x * _bulletPrice} forEach _bulletCountArray;
+	};
+
 	_shelltotal = 0;
-	{_shelltotal = _shelltotal + _x * _shellPrice} forEach _shellCountArray;
+	if (("Shell" in _projectileTypes) || ("Artillery" in _projectileTypes)) then
+	{
+		{_shelltotal = _shelltotal + _x * _shellPrice} forEach _shellCountArray;
+	};
 	
 	_rockettotal = 0;
-	{_rockettotal = _rockettotal + _x * _rocketPrice} forEach _rocketCountArray;
+	if ("Rocket" in _projectileTypes) then
+	{
+		{_rockettotal = _rockettotal + _x * _rocketPrice} forEach _rocketCountArray;
+	};
 	
 	_missiletotal = 0;
-	{_missiletotal = _missiletotal + _x * _missilePrice} forEach _missileCountArray;
+	if (("Missile" in _projectileTypes) || ("MissileLauncher" in _projectileTypes)) then
+	{
+		{_missiletotal = _missiletotal + _x * _missilePrice} forEach _missileCountArray;
+	};
 	
 	_totalVehiclePrice = _vehBasePrice+_bullettotal+_shelltotal+_rockettotal+_missiletotal+_Armortotal+_Loadtotal+_Speedtotal+_Fueltotal;
 	
