@@ -1,18 +1,5 @@
-private ["_mapCenter","_vehicle","_vehicles","_vehBasePrice","_heliBasePrice","_armorPrice","_loadPrice","_speedPrice","_fuelPrice","_bulletPrice","_shellPrice","_rocketPrice",
-		 "_missilePrice","_tier1ArmorMin","_tier1ArmorMax","_tier2ArmorMin","_tier2ArmorMax","_tier3ArmorMin","_tier3ArmorMax","_tier4ArmorMin",
-		 "_tier4ArmorMax","_tier5ArmorMin","_tier5ArmorMax","_tier6ArmorMin","_tier6ArmorMax","_vehicleClassNames","_PriceArray","_PriceArrayFormat",
-		 "_ammoArrayInfoFormat","_magsArray","_ammoArray","_className","_mags","_ammoClass","_ammoItemInfo","_ammoItemType","_ammoCount",
-		 "_turretPath","_vehObj","_turretArray","_vehInfo","_vehicleClassNameIndex","_bulletCountArray","_shellCountArray","_rocketCountArray",
-		 "_missileCountArray","_projectileTypes","_armorRating","_Armortotal","_loadRating","_Loadtotal","_speedRating","_Speedtotal","_fuelRating",
-		 "_Fueltotal","_turretPathArrayIndex","_ammoCountArrayIndex","_projectile","_quality","_bulletCountIndex","_shellCountIndex",
-		 "_rocketCountIndex","_missileCountIndex","_bullettotal","_shelltotal","_rockettotal","_missiletotal","_totalVehiclePrice",
-		 "_vehicleClassName","_basePriceInfo","_baseQuality","_armorQuality","_adjBaseQuality","_projectileTypequality","_exceptionProjectiles",
-		 "_adjProjectileQuality","_numWeaponsQuality","_strClass","_characterNumbers","_characterNumbersArray","_maxCharacters",
-		 "_vehClassNameCharacters","_addedSpaces","_Spacing","_spacingAmount","_spaceCounter","_vehSpawn","_vehObject",
-		 "_magsTurretArray","_R3FTransportFormat","_R3FTransportArray","_R3FListFormat"];
 
 #include "config.sqf";
-
 _armorPrice = armorPrice;
 _loadPrice = loadPrice;
 _speedPrice = speedPrice;
@@ -33,6 +20,7 @@ _tier6ArmorMax = tier6ArmorMax;
 
 _mapCenter = [worldSize / 2, worldsize / 2, 0];
 _vehicle = vehicle player;
+_vehicles  = objNull;
 
 if (useManualMode == true) then
 	{
@@ -49,30 +37,45 @@ if (useManualMode == true) then
 		_vehicles pushback _vehObject;
 		}forEach userVehicleArray;
 	};
-	
-_vehicleClassNames = [];
-_PriceArray = [];
-_characterNumbersArray = [];
-_classListformatArray = [];
-_R3FTransportArray = [];
-_PriceArrayFormat = "";
-_catagoryListFormat = "",
-_R3FListFormat = "";
 
+ _br = toString [13,10];
+
+_ArmedVehicleClasses = [];
+_UnarmedVehicleClasses = [];
+_vehicleClassNames = [];
+_ArmedPriceArray = [];
+_UnarmedPriceArray = [];
+_characterNumbersArray = [];
+_R3FArmedArray = [];
+_R3FUnarmedArray = [];
+_ArmedPriceArrayFormat = "";
+_UnarmedPriceArrayFormat = "";
+_ArmedListFormat = "";
+_UnarmedListFormat = "",
+_R3FUnarmedListFormat = "";
+_R3FArmedListFormat = "";
+
+_deleteTurrArry = [
+					["Laserdesignator_vehicle","SmokeLauncher"],
+					["TruckHorn","SmokeLauncher"],
+					["SmokeLauncher"],
+					["TruckHorn"],
+					["Laserdesignator_vehicle"],
+					"SmokeLauncher",
+					"TruckHorn",
+					"Laserdesignator_vehicle"
+				  ];
 {
-	_magsArray = [];
 	_ammoArray = [];
-	
+	_turretPathArray = [];
 	_className = typeOf _x;
 
+	_mags = [["",[],0,0,0]];
+	
 	_magsTurretArray = magazinesAllTurrets _x;
 	if (count _magsTurretArray > 0) then
 	{
 		_mags = magazinesAllTurrets _x;
-	}
-	else
-	{
-		_mags = [["",[100],0]];
 	};
 
 	{
@@ -82,48 +85,67 @@ _R3FListFormat = "";
 		_ammoCount = _x select 2;
 		_ammoArray pushBack [_ammoCount,_ammoItemType];
 		_turretPath = _x select 1;
+		_turretPathArray pushBack _turretPath;
 	}forEach _mags;
 	
+	_turretPathArray = _turretPathArray arrayIntersect _turretPathArray;
+		
+	_turretweapArray = [];
 	_vehObj = _x;
 	{
-		if (_x != 100) then
+		if (count _turretPathArray > 0) then
 		{
-			_turretArray = _vehObj weaponsTurret [_x];
+			_turretArray = _vehObj weaponsTurret _x;
+			if (_turretArray in _deleteTurrArry)then
+			{
+				_turretArray = [];
+				_turretweapArray pushback _turretArray;
+			}
+			else
+			{
+				_turretweapArray pushback _turretArray;
+			};
 		}
 		else
 		{
-			_turretArray = [100];
+			_turretArray = [];
+			_turretweapArray pushback _turretArray;
 		};
-	}forEach _turretPath;
-
-	_vehInfo = [_className,_ammoArray,_turretArray];
+	}forEach _turretPathArray;
+	
+	_vehInfo = [_className,_ammoArray,_turretweapArray];
 	_vehicleClassNames pushBack _vehInfo;
 }ForEach _vehicles;
 
 _vehicleClassNames = _vehicleClassNames arrayIntersect _vehicleClassNames;
 
-{
-_strClass = _x select 0;
-_characterNumbers = count str _strClass;
-_characterNumbersArray pushBack _characterNumbers;
-}forEach _vehicleClassNames;
-
-_maxCharacters = selectMax _characterNumbersArray;
-
+	{
+	_strClass = _x select 0;
+	_characterNumbers = count str _strClass;
+	_characterNumbersArray pushBack _characterNumbers;
+	}forEach _vehicleClassNames;
+	
+	_maxCharacters = selectMax _characterNumbersArray;
+	
 {
 	_vehicleClassNameIndex = _x select 0;
+	_baseQuality = 0;
+	_vehBasePrice = 0;
+	_bulletPrice = 0;
+	_shellPrice = 0;
+	_rocketPrice = 0;
+	_missilePrice = 0;
 
-	if (_vehicleClassNameIndex isKindOf "LandVehicle") then
-	{
-		_baseQuality = vehStartQuality;
-		_vehBasePrice = vehBasePrice;
-		_bulletPrice = vehBulletPrice;
-		_shellPrice = vehShellPrice;
-		_rocketPrice = vehRocketPrice;
-		_missilePrice = vehMissilePrice;
-
-	};
-	
+		if (_vehicleClassNameIndex isKindOf "LandVehicle") then
+		{
+			_baseQuality = vehStartQuality;
+			_vehBasePrice = vehBasePrice;
+			_bulletPrice = vehBulletPrice;
+			_shellPrice = vehShellPrice;
+			_rocketPrice = vehRocketPrice;
+			_missilePrice = vehMissilePrice;
+		};
+		
 	if (_vehicleClassNameIndex isKindOf "Helicopter") then
 	{
 		_baseQuality = heliStartQuality;
@@ -185,7 +207,7 @@ _maxCharacters = selectMax _characterNumbersArray;
 	}forEach _ammoCountArrayIndex;
 
 	_addedProjectilePoint = false;
-	
+	_armorQuality = 0;
 	if ((_armorRating >= _tier1ArmorMin) && (_armorRating <= _tier1ArmorMax)) then
 	{
 		_armorQuality = _baseQuality + 0;
@@ -212,7 +234,7 @@ _maxCharacters = selectMax _characterNumbersArray;
 	};
 	
 	_adjBaseQuality = _armorQuality;
-	
+	_projectileTypequality = 0;
 	if ("Bullet" in _projectileTypes) then
 	{
 		_projectileTypequality = _adjBaseQuality + 1;
@@ -239,8 +261,8 @@ _maxCharacters = selectMax _characterNumbersArray;
 	};
 	
 	_adjProjectileQuality = _projectileTypequality;
-
-if !(100 in _turretPathArrayIndex) then
+	_numWeaponsQuality = 0;
+if (_addedProjectilePoint == true) then
 	{
 		if (count _turretPathArrayIndex == 1) then
 			{
@@ -336,7 +358,9 @@ if !(100 in _turretPathArrayIndex) then
 	};
 	
 	_totalVehiclePrice = _vehBasePrice+_bullettotal+_shelltotal+_rockettotal+_missiletotal+_Armortotal+_Loadtotal+_Speedtotal+_Fueltotal;
-		
+	
+	_roundedVehiclePrice = round _totalVehiclePrice;
+	
 	_vehicleClassName = _x select 0;
 	
 		_vehClassNameCharacters = count _vehicleClassName;
@@ -356,47 +380,61 @@ if !(100 in _turretPathArrayIndex) then
 		_vehicleClassName = _vehicleClassName + _Spacing;
 		_vehicleClassName = _vehicleClassName joinstring "";										
 
-	_R3FTransportFormat = format ['["%1", %2],',_vehicleClassNameIndex,_loadRating];
-	_R3FTransportArray pushBack _R3FTransportFormat;
-	_basePriceInfo = format ['class %1{quality = %2; price = %3;};',_vehicleClassName,_quality,_totalVehiclePrice];
-	_classListformat = format ['"%1",', _vehicleClassNameIndex];
-	systemChat str _vehicleClassNameIndex;
-	_PriceArray pushback _basePriceInfo;
-	_classListformatArray pushBack _classListformat;
-}ForEach _vehicleClassNames;
-
-_PriceArray sort true;
-_classListformatArray sort true;
-_R3FTransportArray sort true;
-
-{
-	_PriceArrayFormat = _PriceArrayFormat + format['%1%2',_x, endl];
-}forEach _PriceArray;
-
-{
-	_catagoryListFormat = _catagoryListFormat + format['%1%2',_x, endl];
-}forEach _classListformatArray;
-
-{
-	_R3FListFormat = _R3FListFormat + format['%1%2',_x, endl];
-}forEach _R3FTransportArray;
-
-If (getPricingFormat == true) then
-{
-	copyToClipboard _PriceArrayFormat;
-}
-else
-{
-	If (getR3FLogFormat != true) then 
+	if (_addedProjectilePoint == true) then
 	{
-		copyToClipboard _catagoryListFormat;
+		_basePriceInfo = format ['class %1{quality = %2; price = %3;};',_vehicleClassName,_quality,_roundedVehiclePrice];
+		_classListformat = format ['"%1",', _vehicleClassNameIndex];
+		_R3FTransportFormat = format ['["%1", %2],',_vehicleClassNameIndex,_loadRating];
+		_ArmedPriceArray pushback _basePriceInfo;
+		_ArmedVehicleClasses pushBack _classListformat;
+		_R3FArmedArray pushBack _R3FTransportFormat;
 	}
 	else
 	{
-		copyToClipboard _R3FListFormat;
+		_basePriceInfo = format ['class %1{quality = %2; price = %3;};',_vehicleClassName,_quality,_roundedVehiclePrice];
+		_classListformat = format ['"%1",', _vehicleClassNameIndex];
+		_R3FTransportFormat = format ['["%1", %2],',_vehicleClassNameIndex,_loadRating];
+		_UnarmedPriceArray pushback _basePriceInfo;
+		_UnarmedVehicleClasses pushBack _classListformat;
+		_R3FUnarmedArray pushBack _R3FTransportFormat;
 	};
-};
+	systemChat str _vehicleClassNameIndex;
+	sleep .05;
+}ForEach _vehicleClassNames;
+
+	_ArmedPriceArray sort true;
+	_UnarmedPriceArray sort true;
+	_ArmedVehicleClasses sort true;
+	_UnarmedVehicleClasses sort true;
+	_R3FArmedArray sort true;
+	_R3FUnarmedArray sort true;
+
+	{
+		_UnarmedPriceArrayFormat = _UnarmedPriceArrayFormat + format['%1%2',_x, endl];
+	}forEach _UnarmedPriceArray;
+	
+	{
+		_ArmedPriceArrayFormat = _ArmedPriceArrayFormat + format['%1%2',_x, endl];
+	}forEach _ArmedPriceArray;
+	
+	{
+		_UnarmedListFormat = _UnarmedListFormat + format['%1%2',_x, endl];
+	}forEach _UnarmedVehicleClasses;
+	
+	{
+		_ArmedListFormat = _ArmedListFormat + format['%1%2',_x, endl];
+	}forEach _ArmedVehicleClasses;
+	
+	{
+		_R3FUnarmedListFormat = _R3FUnarmedListFormat + format['%1%2',_x, endl];
+	}forEach _R3FUnarmedArray;
+	
+	{
+		_R3FArmedListFormat = _R3FArmedListFormat + format['%1%2',_x, endl];
+	}forEach _R3FArmedArray;
+
+	_finalPriceInfo = composeText ["//UNARMED PRICING:",_br,_UnarmedPriceArrayFormat,_br,_br,"//ARMED PRICING:",_br,_ArmedPriceArrayFormat,_br,_br,"//UNARMED CLASS NAMES:",_br,_UnarmedListFormat,_br,_br,"//ARMED CLASS NAMES:",_br,_ArmedListFormat,_br,_br,"//UNARMED R3F LOGISTICS CAN TRANSPORT CARGO:",_br,_R3FUnarmedListFormat,_br,_br,"//ARMED R3F LOGISTICS CAN TRANSPORT CARGO:",_br,_R3FArmedListFormat];
+	copyToClipboard str _finalPriceInfo;
 
 systemChat str "AUTO PRICING POVIDED BY CRITO";
 systemChat str "COMPLETE AND COPIED TO CLIPBOARD READY TO PASTE";
-

@@ -1,6 +1,6 @@
 vehBasePrice = 1000;		//set initial price for all land vehicles
-heliBasePrice = 10000;		//set initial price for all helicopters
-planeBasePrice= 25000;		//set initial price for all planes/jets
+heliBasePrice = 25000;		//set initial price for all helicopters
+planeBasePrice= 75000;		//set initial price for all planes/jets
 boatBasePrice = 1000;		//set initial price for all boats/subs/ships
 
 vehBulletPrice = 25;		//price per bullet in each mag that comes with Land vehicle if it has a mounted gun
@@ -24,15 +24,10 @@ boatRocketPrice = 2000;     //price per rocket that comes with the boats/subs/sh
 boatMissilePrice = 10000;   //price per missle that comes with the boats/subs/ships if it has missles
 
 
-armorPrice = 30;			//price per each armor rating
+armorPrice = 40;			//price per each armor rating
 loadPrice = 10;				//price per each inventory space
 speedPrice = 20;			//price per each speed rating
 fuelPrice = 15;				//price per each fuel capacity
-
-roundPricing = true;		//Set True to Round Number to nearest 10s or you want it to round farther set to true and set
-							//roundToNearest to desired value.
-
-roundToNearest = 100;		//Round the price to nearest 100s, or 1,000s
 
 //quality ratings for tiers are determined by 4 factors. 1 by armor rating and can set each tier min and max rating in these settings.
 //so here the tier1ArmorMin = 0; and tier1ArmorMax = 99;  work together so if the vehicle armor rating is between these points it first 
@@ -66,61 +61,88 @@ tier5ArmorMax = 499;
 tier6ArmorMin = 500;
 tier6ArmorMax = 100000;
 
-useManualMode = true;		//Set to true to place out vehicles into the editor for pricing.
-
-getPricingFormat = false;	//Set getPricingFormat and getR3FCanTransport both to false to get list of class names in format for Catagories List.
-							//If set to true and getR3FCanTransport is set to true you will not get R3FLogistics Can Transport List this needs
-							//to be set to false and getR3FCanTransport set to true for R3FLogistics Can Transport List.
-							//values that print out for R3FLogistics are the inventory capacity of the vehicle so change how you like this
-							//was just added to give you correct formating to work with.
-							
-getR3FLogFormat = false; 	//Set to true to get Formatting of the vehicles for R3FLogistics. 
-							//This is just the format, you will need to manually set the values you want
-							//values that print out for R3FLogistics are the inventory capacity of the vehicle
+useManualMode = false;		//Set to true to place out vehicles into the editor for pricing.
 
 				//If useManualMode is set to false you must put a list of vehicle class names between these brackets.
 userVehicleArray = 	[
-						"B_CTRG_Heli_Transport_01_sand_F",
-						"B_CTRG_Heli_Transport_01_tropic_F",
-						"B_Heli_Attack_01_dynamicLoadout_F",
-						"B_Heli_Light_01_dynamicLoadout_F",
-						"B_Heli_Light_01_F",
-						"B_Heli_Transport_01_F",
-						"B_Heli_Transport_03_F",
-						"B_Heli_Transport_03_unarmed_F",
-						"Exile_Chopper_Hellcat_FIA",
-						"Exile_Chopper_Hellcat_Green",
-						"Exile_Chopper_Huey_Armed_Desert",
-						"Exile_Chopper_Huey_Armed_Green",
-						"Exile_Chopper_Huey_Desert",
-						"Exile_Chopper_Huey_Green",
-						"Exile_Chopper_Hummingbird_Civillian_Blue",
-						"Exile_Chopper_Hummingbird_Civillian_BlueLine",
-						"Exile_Chopper_Hummingbird_Civillian_Digital",
-						"Exile_Chopper_Hummingbird_Civillian_Elliptical",
-						"Exile_Chopper_Hummingbird_Civillian_Furious",
-						"Exile_Chopper_Hummingbird_Civillian_GrayWatcher",
-						"Exile_Chopper_Hummingbird_Civillian_ION",
-						"Exile_Chopper_Hummingbird_Civillian_Jeans",
-						"Exile_Chopper_Hummingbird_Civillian_Light",
-						"Exile_Chopper_Hummingbird_Civillian_Red",
-						"Exile_Chopper_Hummingbird_Civillian_Shadow",
-						"Exile_Chopper_Hummingbird_Civillian_Sheriff",
-						"Exile_Chopper_Hummingbird_Civillian_Speedy",
-						"Exile_Chopper_Hummingbird_Civillian_Sunset",
-						"Exile_Chopper_Hummingbird_Civillian_Vrana",
-						"Exile_Chopper_Hummingbird_Civillian_Wasp",
-						"Exile_Chopper_Hummingbird_Civillian_Wave",
-						"Exile_Chopper_Hummingbird_Green",
-						"Exile_Chopper_Huron_Green",
-						"Exile_Chopper_Mohawk_FIA",
-						"Exile_Chopper_Orca_Black",
-						"Exile_Chopper_Orca_BlackCustom",
-						"Exile_Chopper_Orca_CSAT",
-						"Exile_Chopper_Taru_Black",
-						"Exile_Chopper_Taru_Covered_Black",
-						"Exile_Chopper_Taru_Covered_CSAT",
-						"Exile_Chopper_Taru_CSAT",
-						"Exile_Chopper_Taru_Transport_Black",
-						"Exile_Chopper_Taru_Transport_CSAT"
+						"B_G_Offroad_01_F",
+						"B_G_Offroad_01_repair_F",
+						"B_G_Quadbike_01_F",
+						"B_G_Van_01_fuel_F",
+						"B_G_Van_01_transport_F",
+						"B_MRAP_01_F",
+						"C_Hatchback_01_F",
+						"C_Hatchback_01_sport_F",
+						"C_Offroad_01_F",
+						"C_Offroad_01_repair_F",
+						"C_Quadbike_01_F",
+						"C_SUV_01_F",
+						"C_Truck_02_box_F",
+						"C_Truck_02_covered_F",
+						"C_Truck_02_fuel_F",
+						"C_Truck_02_transport_F",
+						"C_Van_01_box_F",
+						"C_Van_01_fuel_F",
+						"C_Van_01_transport_F",
+						"I_G_Offroad_01_repair_F",
+						"I_G_Quadbike_01_F",
+						"I_G_Van_01_fuel_F",
+						"I_G_Van_01_transport_F",
+						"I_MRAP_03_F",
+						"I_Quadbike_01_F",
+						"I_Truck_02_ammo_F",
+						"I_Truck_02_box_F",
+						"I_Truck_02_covered_F",
+						"I_Truck_02_fuel_F",
+						"I_Truck_02_medical_F",
+						"I_Truck_02_transport_F",
+						"O_G_Offroad_01_F",
+						"O_G_Offroad_01_repair_F",
+						"O_G_Quadbike_01_F",
+						"O_G_Van_01_fuel_F",
+						"O_G_Van_01_transport_F",
+						"O_MRAP_02_F",
+						"O_Quadbike_01_F",
+						"O_Truck_02_Ammo_F",
+						"O_Truck_02_box_F",
+						"O_Truck_02_covered_F",
+						"O_Truck_02_fuel_F",
+						"O_Truck_02_medical_F",
+						"O_Truck_02_transport_F",
+						"O_Truck_03_ammo_F",
+						"O_Truck_03_covered_F",
+						"O_Truck_03_device_F",
+						"O_Truck_03_fuel_F",
+						"O_Truck_03_medical_F",
+						"O_Truck_03_repair_F",
+						"O_Truck_03_transport_F",
+						"B_APC_Tracked_01_AA_F",
+						"B_APC_Tracked_01_CRV_F",
+						"B_APC_Tracked_01_rcws_F",
+						"B_APC_Wheeled_01_cannon_F",
+						"B_G_Offroad_01_armed_F",
+						"B_G_Offroad_01_AT_F",
+						"B_MBT_01_arty_F",
+						"B_MBT_01_cannon_F",
+						"B_MBT_01_mlrs_F",
+						"B_MBT_01_TUSK_F",
+						"B_MRAP_01_gmg_F",
+						"B_MRAP_01_hmg_F",
+						"I_APC_tracked_03_cannon_F",
+						"I_APC_Wheeled_03_cannon_F",
+						"I_G_Offroad_01_armed_F",
+						"I_G_Offroad_01_AT_F",
+						"I_MBT_03_cannon_F",
+						"I_MRAP_03_gmg_F",
+						"I_MRAP_03_hmg_F",
+						"I_Truck_02_MRL_F",
+						"O_APC_Tracked_02_AA_F",
+						"O_APC_Tracked_02_cannon_F",
+						"O_APC_Wheeled_02_rcws_v2_F",
+						"O_G_Offroad_01_armed_F",
+						"O_G_Offroad_01_AT_F",
+						"O_MBT_02_arty_F",
+						"O_MBT_02_cannon_F",
+						"O_MRAP_02_gmg_F",
+						"O_MRAP_02_hmg_F"
 					];
