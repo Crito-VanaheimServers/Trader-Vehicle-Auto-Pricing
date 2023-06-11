@@ -1,3 +1,14 @@
+targetVehType = "All";				//choices are All, Land, Car, Tank, Air, Plane, Helicopter, or Ship.
+									//All gets you Land, Air, and Ship mixed into one print out.
+									//Land gets you Car and Tank into one pritout.
+									//Air gets you Plane and Helicopter into one print out.
+									//If you want organization I would run this each time for Car, Tank, Plane and Helicopter.
+
+targetMod = "";					//name of mod you want uniforms from. Leave blank to get all uniforms in arma and any loaded mods.
+								//possible mod names for use are but not limited to "Exile" = Exile Mod, "CUP" = CUP Mods,
+								//"rhs" = all the RHS mods. 
+
+
 vehBasePrice = 1000;		//set initial price for all land vehicles
 heliBasePrice = 25000;		//set initial price for all helicopters
 planeBasePrice= 75000;		//set initial price for all planes/jets
@@ -39,7 +50,7 @@ fuelPrice = 15;				//price per each fuel capacity
 //determine if it gets raised or stays at this quality. Did this because I do not like players flying helis or planes at a lvl 1.
 vehStartQuality = 1;		
 heliStartQuality = 3;
-planeStartQuality = 4;
+planeStartQuality = 3;
 boatStartQuality = 1;
 
 
@@ -61,88 +72,20 @@ tier5ArmorMax = 499;
 tier6ArmorMin = 500;
 tier6ArmorMax = 100000;
 
-useManualMode = false;		//Set to true to place out vehicles into the editor for pricing.
+useManualMode = false;		//set this to false for system to find all vehicles automatically.
+							//If set to true it will look at the list of vehicles in the array below.
 
-				//If useManualMode is set to false you must put a list of vehicle class names between these brackets.
+				///If you have a list of vehicles you want to price instead of pricing every vehicle
+				///put them in the array below and set useManualMode to true.
 userVehicleArray = 	[
-						"B_G_Offroad_01_F",
-						"B_G_Offroad_01_repair_F",
-						"B_G_Quadbike_01_F",
-						"B_G_Van_01_fuel_F",
-						"B_G_Van_01_transport_F",
-						"B_MRAP_01_F",
-						"C_Hatchback_01_F",
-						"C_Hatchback_01_sport_F",
-						"C_Offroad_01_F",
-						"C_Offroad_01_repair_F",
-						"C_Quadbike_01_F",
-						"C_SUV_01_F",
-						"C_Truck_02_box_F",
-						"C_Truck_02_covered_F",
-						"C_Truck_02_fuel_F",
-						"C_Truck_02_transport_F",
-						"C_Van_01_box_F",
-						"C_Van_01_fuel_F",
-						"C_Van_01_transport_F",
-						"I_G_Offroad_01_repair_F",
-						"I_G_Quadbike_01_F",
-						"I_G_Van_01_fuel_F",
-						"I_G_Van_01_transport_F",
-						"I_MRAP_03_F",
-						"I_Quadbike_01_F",
-						"I_Truck_02_ammo_F",
-						"I_Truck_02_box_F",
-						"I_Truck_02_covered_F",
-						"I_Truck_02_fuel_F",
-						"I_Truck_02_medical_F",
-						"I_Truck_02_transport_F",
-						"O_G_Offroad_01_F",
-						"O_G_Offroad_01_repair_F",
-						"O_G_Quadbike_01_F",
-						"O_G_Van_01_fuel_F",
-						"O_G_Van_01_transport_F",
-						"O_MRAP_02_F",
-						"O_Quadbike_01_F",
-						"O_Truck_02_Ammo_F",
-						"O_Truck_02_box_F",
-						"O_Truck_02_covered_F",
-						"O_Truck_02_fuel_F",
-						"O_Truck_02_medical_F",
-						"O_Truck_02_transport_F",
-						"O_Truck_03_ammo_F",
-						"O_Truck_03_covered_F",
-						"O_Truck_03_device_F",
-						"O_Truck_03_fuel_F",
-						"O_Truck_03_medical_F",
-						"O_Truck_03_repair_F",
-						"O_Truck_03_transport_F",
-						"B_APC_Tracked_01_AA_F",
-						"B_APC_Tracked_01_CRV_F",
-						"B_APC_Tracked_01_rcws_F",
-						"B_APC_Wheeled_01_cannon_F",
-						"B_G_Offroad_01_armed_F",
-						"B_G_Offroad_01_AT_F",
-						"B_MBT_01_arty_F",
-						"B_MBT_01_cannon_F",
-						"B_MBT_01_mlrs_F",
-						"B_MBT_01_TUSK_F",
-						"B_MRAP_01_gmg_F",
-						"B_MRAP_01_hmg_F",
-						"I_APC_tracked_03_cannon_F",
-						"I_APC_Wheeled_03_cannon_F",
-						"I_G_Offroad_01_armed_F",
-						"I_G_Offroad_01_AT_F",
-						"I_MBT_03_cannon_F",
-						"I_MRAP_03_gmg_F",
-						"I_MRAP_03_hmg_F",
-						"I_Truck_02_MRL_F",
-						"O_APC_Tracked_02_AA_F",
-						"O_APC_Tracked_02_cannon_F",
-						"O_APC_Wheeled_02_rcws_v2_F",
-						"O_G_Offroad_01_armed_F",
-						"O_G_Offroad_01_AT_F",
-						"O_MBT_02_arty_F",
-						"O_MBT_02_cannon_F",
-						"O_MRAP_02_gmg_F",
-						"O_MRAP_02_hmg_F"
+						"Exile_Boat_MotorBoat_Orange",
+						"Exile_Boat_MotorBoat_Police",
+						"Exile_Boat_MotorBoat_White",
+						"Exile_Boat_RHIB",
+						"Exile_Boat_RubberDuck_Black",
+						"Exile_Boat_RubberDuck_Blue",
+						"Exile_Boat_RubberDuck_CSAT",
+						"Exile_Boat_RubberDuck_Digital",
+						"Exile_Boat_RubberDuck_Orange",
+						"Exile_Boat_WaterScooter"
 					];
