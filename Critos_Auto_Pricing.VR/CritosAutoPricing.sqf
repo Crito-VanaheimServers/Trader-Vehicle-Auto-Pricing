@@ -1,5 +1,6 @@
 
 #include "config.sqf";
+
 _armorPrice = armorPrice;
 _loadPrice = loadPrice;
 _speedPrice = speedPrice;
@@ -24,18 +25,138 @@ _vehicles  = objNull;
 
 if (useManualMode == true) then
 	{
-			_vehicles = _mapCenter nearEntities ["AllVehicles", 80000];
-			_elementsDelete = [_vehicle];
-			_vehicles = _vehicles - _elementsDelete;
-	}
-	else
-	{
 		_vehicles = [];
 		{
 		_vehSpawn = [position player, 100, 1000, 1] call BIS_fnc_findSafePos;
 		_vehObject = createVehicle [_x, _vehSpawn];
 		_vehicles pushback _vehObject;
 		}forEach userVehicleArray;
+	}
+	else
+	{
+		_classNameArray = (configFile >> "CfgVehicles") call BIS_fnc_getCfgSubClasses;
+
+		_vehicles = [];
+		
+		for "_i" from 0 to (count _classNameArray)-1 do 
+		{
+			if([targetMod, _classNameArray select _i] call BIS_fnc_inString)then
+			{
+				_ClassName = _classNameArray select _i;
+				
+				_scope = getNumber (configFile >> "CfgVehicles" >> _ClassName >> "scope");
+				
+				if(_scope == 2)then
+				{
+					_itemCheck = [_ClassName] call BIS_fnc_itemType;
+					
+					if(_itemCheck select 0 == "")then
+					{
+						_itemCheck = [_ClassName] call BIS_fnc_ObjectType;
+					};
+					
+					_itemClass = _itemCheck select 0;	
+					_itemType = _itemCheck select 1;
+					_temparray = [_itemClass,_itemType];
+					if(_itemClass == "Vehicle")then
+					{
+						if (targetVehType == "All")then
+						{
+							if((_itemType == "Car") || (_itemType == "Plane") || (_itemType == "Helicopter") || (_itemType == "Ship") || (_itemType == "Tank") || (_itemType == "WheeledAPC"))then
+							{
+									_vehSpawn = [position player, 100, 1000, 1] call BIS_fnc_findSafePos;
+									_vehObject = createVehicle [_ClassName, _vehSpawn];
+									_vehicles pushback _vehObject;
+							};
+						}
+						else
+						{
+							if (targetVehType == "Land")then
+							{
+								if((_itemType == "Car") || (_itemType == "Tank") || (_itemType == "WheeledAPC"))then
+								{
+										_vehSpawn = [position player, 100, 1000, 1] call BIS_fnc_findSafePos;
+										_vehObject = createVehicle [_ClassName, _vehSpawn];
+										_vehicles pushback _vehObject;
+								};
+							}
+							else
+							{
+								if (targetVehType == "Air")then
+								{
+									if((_itemType == "Plane") || (_itemType == "Helicopter"))then
+									{
+											_vehSpawn = [position player, 100, 1000, 1] call BIS_fnc_findSafePos;
+											_vehObject = createVehicle [_ClassName, _vehSpawn];
+											_vehicles pushback _vehObject;
+									};
+								}
+								else
+								{
+									if (targetVehType == "Car")then
+									{
+										if(_itemType == "Car")then
+										{
+												_vehSpawn = [position player, 100, 1000, 1] call BIS_fnc_findSafePos;
+												_vehObject = createVehicle [_ClassName, _vehSpawn];
+												_vehicles pushback _vehObject;
+										};
+									}
+									else
+									{
+										if (targetVehType == "Tank")then
+										{
+											if((_itemType == "Tank") || (_itemType == "WheeledAPC"))then
+											{
+													_vehSpawn = [position player, 100, 1000, 1] call BIS_fnc_findSafePos;
+													_vehObject = createVehicle [_ClassName, _vehSpawn];
+													_vehicles pushback _vehObject;
+											};
+										}
+										else
+										{
+											if (targetVehType == "Plane")then
+											{
+												if(_itemType == "Plane")then
+												{
+														_vehSpawn = [position player, 100, 1000, 1] call BIS_fnc_findSafePos;
+														_vehObject = createVehicle [_ClassName, _vehSpawn];
+														_vehicles pushback _vehObject;
+												};
+											}
+											else
+											{
+												if (targetVehType == "Helicopter")then
+												{
+													if(_itemType == "Helicopter")then
+													{
+															_vehSpawn = [position player, 100, 1000, 1] call BIS_fnc_findSafePos;
+															_vehObject = createVehicle [_ClassName, _vehSpawn];
+															_vehicles pushback _vehObject;
+													};
+												}
+												else
+												{	
+													if (targetVehType == "Ship")then
+													{
+														if(_itemType == "Ship")then
+														{
+																_vehSpawn = [position player, 100, 1000, 1] call BIS_fnc_findSafePos;
+																_vehObject = createVehicle [_ClassName, _vehSpawn];
+																_vehicles pushback _vehObject;
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
 	};
 
  _br = toString [13,10];
